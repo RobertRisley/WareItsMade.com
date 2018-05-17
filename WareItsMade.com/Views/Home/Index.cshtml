@@ -1,0 +1,48 @@
+﻿@model WareItsMade.com.Models.SessionData
+@{
+    ViewBag.Title = "Home Page";
+}
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="jumbotron">
+        <h1>Ware It's Made</h1>
+        <p class="lead">It gives you the power to find the wares.</p>
+            @Html.DropDownList("ddlCountrys", (SelectList)ViewBag.Countrys, new { @class = "form-control" })
+            <input type="submit" value="<< Discover Wares for this Country" class="btn btn-default" />
+            <br /><br />
+            <p>
+                Wares are articles of manufacture considered as being for sale,<br />
+                &nbsp; OR any talent or asset regarded as a commercial or saleable commodity
+            </p>
+</div>
+}
+
+<script type="text/javascript">
+    var sessionData;
+
+    $(function () {
+        LoadSessionData();
+    });
+
+    function SaveSessionData() {
+        $.post('/SessionData/Save', sessionData);
+    }
+
+    function LoadSessionData() {
+        $.post('/SessionData/Load', OnSessionDataLoaded);
+    }
+
+    function OnSessionDataLoaded(data) {
+        sessionData = data;
+    }
+
+    $(document).ready(function () {
+
+        $("#ddlCountrys").change(function () {
+            sessionData.SelectedCountryId = $(this).val();
+            SaveSessionData();
+        });
+
+    });
+
+</script>

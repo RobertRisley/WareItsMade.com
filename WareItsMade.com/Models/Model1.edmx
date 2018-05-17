@@ -1,0 +1,420 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="WaresModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Classes">
+          <Key>
+            <PropertyRef Name="ClassId" />
+          </Key>
+          <Property Name="ClassId" Type="nchar" MaxLength="8" Nullable="false" />
+          <Property Name="ClassTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FamilyId" Type="nchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Commoditys">
+          <Key>
+            <PropertyRef Name="CommodityId" />
+          </Key>
+          <Property Name="CommodityId" Type="nchar" MaxLength="8" Nullable="false" />
+          <Property Name="CommodityTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ClassId" Type="nchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Familys">
+          <Key>
+            <PropertyRef Name="FamilyId" />
+          </Key>
+          <Property Name="FamilyId" Type="nchar" MaxLength="8" Nullable="false" />
+          <Property Name="FamilyTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="SegmentId" Type="nchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Iso3166">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="CountryTitle" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Iso3166-2">
+          <Key>
+            <PropertyRef Name="SubdivisionId" />
+          </Key>
+          <Property Name="SubdivisionId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CountryId" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="SubdivisionTitle" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Segments">
+          <Key>
+            <PropertyRef Name="SegmentId" />
+          </Key>
+          <Property Name="SegmentId" Type="nchar" MaxLength="8" Nullable="false" />
+          <Property Name="SegmentTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Unspsc">
+          <Key>
+            <PropertyRef Name="CommodityId" />
+          </Key>
+          <Property Name="SegmentId" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="SegmentTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FamilyId" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="FamilyTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ClassId" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="ClassTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CommodityId" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="CommodityTitle" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Classes_Familys">
+          <End Role="Familys" Type="Self.Familys" Multiplicity="1" />
+          <End Role="Classes" Type="Self.Classes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Familys">
+              <PropertyRef Name="FamilyId" />
+            </Principal>
+            <Dependent Role="Classes">
+              <PropertyRef Name="FamilyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Commoditys_Classes">
+          <End Role="Classes" Type="Self.Classes" Multiplicity="1" />
+          <End Role="Commoditys" Type="Self.Commoditys" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Classes">
+              <PropertyRef Name="ClassId" />
+            </Principal>
+            <Dependent Role="Commoditys">
+              <PropertyRef Name="ClassId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Familys_Segments">
+          <End Role="Segments" Type="Self.Segments" Multiplicity="1" />
+          <End Role="Familys" Type="Self.Familys" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Segments">
+              <PropertyRef Name="SegmentId" />
+            </Principal>
+            <Dependent Role="Familys">
+              <PropertyRef Name="SegmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Iso3166-2_Iso3166">
+          <End Role="Iso3166" Type="Self.Iso3166" Multiplicity="1" />
+          <End Role="Iso3166-2" Type="Self.Iso3166-2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Iso3166">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="Iso3166-2">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetWeightedCommodities" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CommodityId" Type="nchar" Mode="In" />
+          <Parameter Name="CountryId" Type="nchar" Mode="In" />
+          <Parameter Name="OwnershipWeight" Type="int" Mode="In" />
+          <Parameter Name="CapitalWeight" Type="int" Mode="In" />
+          <Parameter Name="LaborWeight" Type="int" Mode="In" />
+          <Parameter Name="LandWeight" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="WaresModelStoreContainer">
+          <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Commoditys" EntityType="Self.Commoditys" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Familys" EntityType="Self.Familys" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Iso3166" EntityType="Self.Iso3166" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Iso3166-2" EntityType="Self.Iso3166-2" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Segments" EntityType="Self.Segments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Unspsc" EntityType="Self.Unspsc" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Classes_Familys" Association="Self.FK_Classes_Familys">
+            <End Role="Familys" EntitySet="Familys" />
+            <End Role="Classes" EntitySet="Classes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Commoditys_Classes" Association="Self.FK_Commoditys_Classes">
+            <End Role="Classes" EntitySet="Classes" />
+            <End Role="Commoditys" EntitySet="Commoditys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Familys_Segments" Association="Self.FK_Familys_Segments">
+            <End Role="Segments" EntitySet="Segments" />
+            <End Role="Familys" EntitySet="Familys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Iso3166-2_Iso3166" Association="Self.FK_Iso3166-2_Iso3166">
+            <End Role="Iso3166" EntitySet="Iso3166" />
+            <End Role="Iso3166-2" EntitySet="Iso3166-2" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WaresModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="ClassId" />
+          </Key>
+          <Property Name="ClassId" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ClassTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FamilyId" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Family" Relationship="Self.FK_Classes_Familys" FromRole="Classes" ToRole="Familys" />
+          <NavigationProperty Name="Commoditys" Relationship="Self.FK_Commoditys_Classes" FromRole="Classes" ToRole="Commoditys" />
+        </EntityType>
+        <EntityType Name="Commodity">
+          <Key>
+            <PropertyRef Name="CommodityId" />
+          </Key>
+          <Property Name="CommodityId" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CommodityTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClassId" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Class" Relationship="Self.FK_Commoditys_Classes" FromRole="Commoditys" ToRole="Classes" />
+        </EntityType>
+        <EntityType Name="Family">
+          <Key>
+            <PropertyRef Name="FamilyId" />
+          </Key>
+          <Property Name="FamilyId" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="FamilyTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SegmentId" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Classes" Relationship="Self.FK_Classes_Familys" FromRole="Familys" ToRole="Classes" />
+          <NavigationProperty Name="Segment" Relationship="Self.FK_Familys_Segments" FromRole="Familys" ToRole="Segments" />
+        </EntityType>
+        <EntityType Name="Iso3166">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CountryTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Iso3166_2" Relationship="Self.FK_Iso3166_2_Iso3166" FromRole="Iso3166" ToRole="Iso3166_2" />
+        </EntityType>
+        <EntityType Name="Iso3166_2">
+          <Key>
+            <PropertyRef Name="SubdivisionId" />
+          </Key>
+          <Property Name="SubdivisionId" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CountryId" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="SubdivisionTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Iso3166" Relationship="Self.FK_Iso3166_2_Iso3166" FromRole="Iso3166_2" ToRole="Iso3166" />
+        </EntityType>
+        <EntityType Name="Segment">
+          <Key>
+            <PropertyRef Name="SegmentId" />
+          </Key>
+          <Property Name="SegmentId" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="SegmentTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Familys" Relationship="Self.FK_Familys_Segments" FromRole="Segments" ToRole="Familys" />
+        </EntityType>
+        <EntityType Name="Unspsc">
+          <Key>
+            <PropertyRef Name="CommodityId" />
+          </Key>
+          <Property Name="SegmentId" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="SegmentTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FamilyId" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="FamilyTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClassId" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ClassTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CommodityId" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CommodityTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Classes_Familys">
+          <End Role="Familys" Type="Self.Family" Multiplicity="1" />
+          <End Role="Classes" Type="Self.Class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Familys">
+              <PropertyRef Name="FamilyId" />
+            </Principal>
+            <Dependent Role="Classes">
+              <PropertyRef Name="FamilyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Commoditys_Classes">
+          <End Role="Classes" Type="Self.Class" Multiplicity="1" />
+          <End Role="Commoditys" Type="Self.Commodity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Classes">
+              <PropertyRef Name="ClassId" />
+            </Principal>
+            <Dependent Role="Commoditys">
+              <PropertyRef Name="ClassId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Familys_Segments">
+          <End Role="Segments" Type="Self.Segment" Multiplicity="1" />
+          <End Role="Familys" Type="Self.Family" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Segments">
+              <PropertyRef Name="SegmentId" />
+            </Principal>
+            <Dependent Role="Familys">
+              <PropertyRef Name="SegmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Iso3166_2_Iso3166">
+          <End Role="Iso3166" Type="Self.Iso3166" Multiplicity="1" />
+          <End Role="Iso3166_2" Type="Self.Iso3166_2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Iso3166">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="Iso3166_2">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WaresEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Classes" EntityType="Self.Class" />
+          <EntitySet Name="Commoditys" EntityType="Self.Commodity" />
+          <EntitySet Name="Familys" EntityType="Self.Family" />
+          <EntitySet Name="Iso3166" EntityType="Self.Iso3166" />
+          <EntitySet Name="Iso3166_2" EntityType="Self.Iso3166_2" />
+          <EntitySet Name="Segments" EntityType="Self.Segment" />
+          <EntitySet Name="Unspscs" EntityType="Self.Unspsc" />
+          <AssociationSet Name="FK_Classes_Familys" Association="Self.FK_Classes_Familys">
+            <End Role="Familys" EntitySet="Familys" />
+            <End Role="Classes" EntitySet="Classes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Commoditys_Classes" Association="Self.FK_Commoditys_Classes">
+            <End Role="Classes" EntitySet="Classes" />
+            <End Role="Commoditys" EntitySet="Commoditys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Familys_Segments" Association="Self.FK_Familys_Segments">
+            <End Role="Segments" EntitySet="Segments" />
+            <End Role="Familys" EntitySet="Familys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Iso3166_2_Iso3166" Association="Self.FK_Iso3166_2_Iso3166">
+            <End Role="Iso3166" EntitySet="Iso3166" />
+            <End Role="Iso3166_2" EntitySet="Iso3166_2" />
+          </AssociationSet>
+          <FunctionImport Name="GetWeightedCommodities" ReturnType="Collection(WaresModel.GetWeightedCommodities_Result)">
+            <Parameter Name="CommodityId" Mode="In" Type="String" />
+            <Parameter Name="CountryId" Mode="In" Type="String" />
+            <Parameter Name="OwnershipWeight" Mode="In" Type="Int32" />
+            <Parameter Name="CapitalWeight" Mode="In" Type="Int32" />
+            <Parameter Name="LaborWeight" Mode="In" Type="Int32" />
+            <Parameter Name="LandWeight" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="GetWeightedCommodities_Result">
+          <Property Type="Int32" Name="ID" Nullable="true" />
+          <Property Type="String" Name="CountryId" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="CommodityTitle" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="ObjectId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="NameName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="WeightedPercentage" Nullable="true" />
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+          <Property Type="Double" Name="CommodityId" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WaresModelStoreContainer" CdmEntityContainer="WaresEntities">
+          <EntitySetMapping Name="Classes">
+            <EntityTypeMapping TypeName="WaresModel.Class">
+              <MappingFragment StoreEntitySet="Classes">
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="ClassTitle" ColumnName="ClassTitle" />
+                <ScalarProperty Name="FamilyId" ColumnName="FamilyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Commoditys">
+            <EntityTypeMapping TypeName="WaresModel.Commodity">
+              <MappingFragment StoreEntitySet="Commoditys">
+                <ScalarProperty Name="CommodityId" ColumnName="CommodityId" />
+                <ScalarProperty Name="CommodityTitle" ColumnName="CommodityTitle" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Familys">
+            <EntityTypeMapping TypeName="WaresModel.Family">
+              <MappingFragment StoreEntitySet="Familys">
+                <ScalarProperty Name="FamilyId" ColumnName="FamilyId" />
+                <ScalarProperty Name="FamilyTitle" ColumnName="FamilyTitle" />
+                <ScalarProperty Name="SegmentId" ColumnName="SegmentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Iso3166">
+            <EntityTypeMapping TypeName="WaresModel.Iso3166">
+              <MappingFragment StoreEntitySet="Iso3166">
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="CountryTitle" ColumnName="CountryTitle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Iso3166_2">
+            <EntityTypeMapping TypeName="WaresModel.Iso3166_2">
+              <MappingFragment StoreEntitySet="Iso3166-2">
+                <ScalarProperty Name="SubdivisionId" ColumnName="SubdivisionId" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="SubdivisionTitle" ColumnName="SubdivisionTitle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Segments">
+            <EntityTypeMapping TypeName="WaresModel.Segment">
+              <MappingFragment StoreEntitySet="Segments">
+                <ScalarProperty Name="SegmentId" ColumnName="SegmentId" />
+                <ScalarProperty Name="SegmentTitle" ColumnName="SegmentTitle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Unspscs">
+            <EntityTypeMapping TypeName="WaresModel.Unspsc">
+              <MappingFragment StoreEntitySet="Unspsc">
+                <ScalarProperty Name="SegmentId" ColumnName="SegmentId" />
+                <ScalarProperty Name="SegmentTitle" ColumnName="SegmentTitle" />
+                <ScalarProperty Name="FamilyId" ColumnName="FamilyId" />
+                <ScalarProperty Name="FamilyTitle" ColumnName="FamilyTitle" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="ClassTitle" ColumnName="ClassTitle" />
+                <ScalarProperty Name="CommodityId" ColumnName="CommodityId" />
+                <ScalarProperty Name="CommodityTitle" ColumnName="CommodityTitle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetWeightedCommodities" FunctionName="WaresModel.Store.GetWeightedCommodities">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="WaresModel.GetWeightedCommodities_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="CommodityTitle" ColumnName="CommodityTitle" />
+                <ScalarProperty Name="ObjectId" ColumnName="ObjectId" />
+                <ScalarProperty Name="NameName" ColumnName="NameName" />
+                <ScalarProperty Name="WeightedPercentage" ColumnName="WeightedPercentage" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="CommodityId" ColumnName="CommodityId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

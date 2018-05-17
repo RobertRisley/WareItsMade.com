@@ -1,0 +1,30 @@
+﻿@using WareItsMade.com.Models;
+@using Microsoft.AspNet.Identity;
+@model WareItsMade.com.Models.ManageUserViewModel
+@{
+    ViewBag.Title = "Manage Account";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div class="row">
+    <div class="col-md-12">
+        @if (ViewBag.HasLocalPassword)
+        {
+            @Html.Partial("_ChangeProfilePartial", Model)
+        }
+        else
+        {
+            @Html.Partial("_SetPasswordPartial")
+        }
+
+        <section id="externalLogins">
+            @Html.Action("RemoveAccountList")
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
+        </section>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

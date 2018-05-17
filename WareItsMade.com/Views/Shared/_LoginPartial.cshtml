@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNet.Identity
+<div class="btn-group pull-right">
+    @if (Request.IsAuthenticated)
+    {
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span> Account <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Manage", "Manage", "Account", routeValues: null, htmlAttributes: new { })</li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            @*<ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                </ul>*@
+        }
+    }
+    else
+    {
+        @*<div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="btn-group navbar-btn">
+                            <button class="btn btn-default" style="margin-top:7px">Login</button>
+                            <button data-toggle="dropdown" style="margin-top:7px" class="btn btn-default dropdown-backdrop"><span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="background-color: darkcyan; width: 200px; text-align:center">
+                                <li><input type="text" style="margin-top: 10px; width:80%; text-align:center; " name="username" placeholder="Username" /></li>
+                                <li><input type="password" style="margin-top: 10px; width: 80%; text-align: center" name="password" placeholder="Password" /> </li>
+                                <li><button type="submit" style="width:80%; margin-top:6px" class="btn btn-group-lg btn-success" id="loginLink" onclick="location.href='@Url.Action("Login",  "Account")';return false;">Login</button></li>
+                                <li><button type="submit" style="width: 80%; margin-top: 6px" class="btn btn-group-lg btn-warning" id="registerLink" onclick="location.href='@Url.Action("Register",  "Account")';return false;">Register</button></li>
+                            </ul>
+                        </div>
+                    </li>                </ul>
+            </div>*@
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Account <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                        <li>@Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        @*<ul class="nav navbar-nav navbar-right">
+                <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                <li>@Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "btn glyphicon glyphicon-user" })</li>
+            </ul>*@
+    }
+</div>
