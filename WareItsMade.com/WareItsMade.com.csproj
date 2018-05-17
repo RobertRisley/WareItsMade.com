@@ -228,6 +228,17 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\sql\Countries.sql" />
+    <Content Include="App_Data\sql\GetSegments.sql" />
+    <Content Include="App_Data\sql\GetWeightedCommodities.sql" />
+    <Content Include="App_Data\sql\Iso3166-2-DML.sql" />
+    <Content Include="App_Data\sql\Iso3166-DML.sql" />
+    <Content Include="App_Data\sql\Iso3166.sql" />
+    <Content Include="App_Data\sql\Seg-Fam-Cla-Com.sql" />
+    <Content Include="App_Data\sql\Unspsc-DML.sql" />
+    <Content Include="App_Data\sql\UnspscCodes.sql" />
+    <Content Include="App_Data\sql\UsersAndSecurity.sql" />
+    <Content Include="App_Data\sql\UserWares.sql" />
     <Content Include="Content\bootstrap-lumen.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -414,9 +425,7 @@
     <Content Include="Views\Account\_ChangeProfilePartial.cshtml" />
     <Content Include="Views\Home\Discover.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
